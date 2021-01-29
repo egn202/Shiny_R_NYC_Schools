@@ -8,9 +8,15 @@ school_dist = schoolDistricts@data[["school_dist"]]
 leaflet() %>% addTiles() %>% 
   addPolygons(data=schoolDistricts,stroke = T, label = school_dist)
                 
-                
+############################
 
-pal <- colorNumeric("viridis", NULL)
+pal <- colorNumeric("viridis", as.numeric(schoolDistricts@data$school_dist))
+leaflet(schoolDistricts) %>%
+  addTiles() %>%
+  addPolygons(stroke = FALSE, smoothFactor = 0.3, fillOpacity = 1,
+              fillColor = ~pal(as.numeric(school_dist)))
+
+
 
 leaflet(schoolDistricts) %>%
   addTiles() %>%
@@ -27,4 +33,4 @@ district_testscore$District = as.factor(district_testscore$District)
 school_testscores <- read.csv("school_testscores.csv")
 school_testscores$School.Name = as.factor(school_testscores$School.Name)
 
-ggplot(data=school_testscores)+geom_histogram(aes(x=Avg_Test_Score))
+ggplot(data=school_testscores)+geom_density(aes(x=Avg_Test_Score)) #add line for school chosen
