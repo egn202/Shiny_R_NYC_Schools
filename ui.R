@@ -12,11 +12,7 @@ shinyUI(dashboardPage(
   dashboardSidebar(sidebarMenu(
     menuItem("School", tabName = "school", icon = icon("dashboard")),
     menuItem("District", tabName = "district", icon = icon("th")),
-    menuItem(
-      "Source code",
-      icon = icon("file-code-o"),
-      href = "https://github.com/rstudio/shinydashboard/"
-    ) #creates link to another website
+    menuItem("Source code",icon = icon("file-code-o"),href = "https://github.com/rstudio/shinydashboard/") #creates link to another website
   )),
   
   
@@ -75,9 +71,9 @@ shinyUI(dashboardPage(
           id = "tabset1",
           height = "250px",
           width = 7,
-          tabPanel("Tab1", DT::dataTableOutput("table1")),
-          tabPanel("Tab2", plotOutput("plot7",height=250)),
-          tabPanel("Tab3", plotOutput("plot6",height=250))
+          tabPanel("General Info", DT::dataTableOutput("table1")),
+          tabPanel("Attendance", plotOutput("plot7",height=250)),
+          tabPanel("Student Info", plotOutput("plot6",height=250))
         )
       ),
       # 
