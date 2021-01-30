@@ -1,4 +1,4 @@
-mydata <- nydoe[, c(21:32)]
+mydata <- nydoe[, c(5:32)]
 head(mydata)
 
 mydata = drop_na(mydata)

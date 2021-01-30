@@ -39,6 +39,7 @@ for (i in 6:32) {
 nydoe$X90Pct.Attend=parse_number(nydoe$X90Pct.Attend)
 nydoe$ELA.Std=parse_number(nydoe$ELA.Std)
 nydoe$Math.Std=parse_number(nydoe$Math.Std)
+nydoe$Year=as.factor(nydoe$Year)
 
 write.csv(nydoe, file = "nydoe.csv")
 
@@ -72,7 +73,7 @@ nydoe %>% group_by(Year, District) %>% summarise(mean=mean(SA.Score, na.rm=T)) %
   xlab("")
 
 #density by year
-nydoe %>% ggplot(aes(x=SA.Score, fill=as.factor(Year))) +
+nydoe %>% ggplot(aes(x=Math.Std, fill=Year)) +
   geom_density(adjust=1.5, alpha=.4) +
   theme_ipsum()
 
@@ -81,6 +82,8 @@ nydoe %>% filter(Year=="2019") %>% ggplot(aes(x=District, y=SA.Score))+geom_boxp
 
 nydoe %>%  ggplot(aes(x=District, y=SA.Score))+geom_boxplot(aes(fill=Borough))+facet_wrap(~Year)
 
+nydoe %>% ggplot() + geom_boxplot(aes(x =Year, y = Math.Std, fill=Year))+
+geom_boxplot(aes(x =Year, y = ELA.Std))
 
 #smooth line: math scores for district
 nydoe %>% filter(District=="01") %>% ggplot() + geom_smooth(aes(x=Year, y=Math.Std))
