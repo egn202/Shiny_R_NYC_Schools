@@ -11,12 +11,14 @@ shinyUI(dashboardPage(
   
   dashboardSidebar(sidebarMenu(
     img(src = "http://mannahattamamma.com/wp-content/uploads/2010/11/districtmapbig.gif", height = 240, width = 230),
-    menuItem("School", tabName = "school", icon = icon("school")),
-             menuItem("District", tabName = "district", icon = icon("layer-group")),
-             menuItem("City", tabName = "city", icon = icon("apple-alt")),
-             menuItem("Insights", tabName = "insights", icon = icon("lightbulb")),
-             menuItem("Source code",icon = icon("file-code-o"),href = "https://github.com/rstudio/shinydashboard/") #creates link to another website
-    )),
+    menuItem("School", tabName = "school", icon = icon("school"),selectizeInput(inputId = "District",
+                                                                                label = "Select District",
+                                                                                choices = unique(nydoe$District)),
+    menuItem("District", tabName = "district", icon = icon("layer-group")),
+    menuItem("City", tabName = "city", icon = icon("apple-alt")),
+    menuItem("Insights", tabName = "insights", icon = icon("lightbulb")),
+    menuItem("Source code",icon = icon("file-code-o"),href = "https://github.com/rstudio/shinydashboard/") #creates link to another website
+  )),
   
   
   dashboardBody(tabItems(
@@ -24,12 +26,6 @@ shinyUI(dashboardPage(
     tabItem(
       tabName = "school",
       fluidRow(
-        box(
-          selectizeInput(inputId = "District",
-                         label = "Select District",
-                         choices = unique(nydoe$District)),
-        ),
-        
         box(
           selectizeInput(inputId = "Name",
                          label = "Select School",
@@ -121,4 +117,4 @@ shinyUI(dashboardPage(
     tabItem(tabName = "district",
             h2("district tab content"))
   ))
-))
+)))
