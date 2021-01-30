@@ -29,7 +29,6 @@ shinyUI(dashboardPage(
           title = "Student Achievement",
           status = "primary",
           solidHeader = TRUE,
-          #status is the color of header
           collapsible = TRUE,
           plotOutput("plot1", height = 250)
         ),
@@ -38,59 +37,70 @@ shinyUI(dashboardPage(
           title = "Quality Ratings",
           status = "primary",
           solidHeader = TRUE,
-          #status is the color of header
           collapsible = TRUE,
           plotOutput("plot2", height = 250)
         )
       ),
       fluidRow(
         box(
-          title = "English Scores",
+          title = "English Language Art (ELA)",
           status = "primary",
           solidHeader = TRUE,
-          #status is the color of header
           collapsible = TRUE,
           plotOutput("plot3", height = 250)
         ),
         
         box(
-          title = "Math Scores",
+          title = "Math",
           status = "primary",
           solidHeader = TRUE,
-          #status is the color of header
           collapsible = TRUE,
           plotOutput("plot4", height = 250)
         )
       ),
       
       fluidRow(
+        box(
+          title = "Demographics",
+          status = "primary",
+          solidHeader = TRUE,
+          collapsible = TRUE,
+          width = 5,
+          plotOutput("plot5", height = 250)
+        ),
+        
         tabBox(
-          title = "First tabBox",
+          title = "Additional Info",
           # The id lets us use input$tabset1 on the server to find the current tab
           id = "tabset1",
           height = "250px",
-          tabPanel("Tab1", "First tab content"),
-          tabPanel("Tab2", "Tab content 2")
-        ),
-        tabBox(
-          side = "right",
-          height = "250px",
-          selected = "Tab3",
-          tabPanel("Tab1", "Tab content 1"),
-          tabPanel("Tab2", "Tab content 2"),
-          tabPanel("Tab3", "Note that when side=right, the tab order is reversed.")
+          width = 7,
+          tabPanel("Tab1", DT::dataTableOutput("table1")),
+          tabPanel("Tab2", plotOutput("plot7",height=250)),
+          tabPanel("Tab3", plotOutput("plot6",height=250))
         )
       ),
-      fluidRow(tabBox(
-        # Title can include an icon
-        title = tagList(shiny::icon("gear"), "tabBox status"),
-        tabPanel(
-          "Tab1",
-          "Currently selected tab from first box:",
-          verbatimTextOutput("tabset1Selected")
-        ),
-        tabPanel("Tab2", "Tab content 2")
-      ))
+      # 
+      # fluidRow(
+      #   tabBox(
+      #     side = "right",
+      #     height = "250px",
+      #     selected = "Tab3",
+      #     tabPanel("Tab1", "eugene"),
+      #     tabPanel("Tab2", "Tab content 2"),
+      #     tabPanel("Tab3", "Note that when side=right, the tab order is reversed.")
+      #   )
+      # ),
+      # fluidRow(tabBox(
+      #   # Title can include an icon
+      #   title = tagList(shiny::icon("gear"), "tabBox status"),
+      #   tabPanel(
+      #     "Tab1",
+      #     "Currently selected tab from first box:",
+      #     verbatimTextOutput("tabset1Selected")
+      #   ),
+      #   tabPanel("Tab2", "Tab content 2")
+      # ))
     ),
     
     
