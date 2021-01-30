@@ -22,6 +22,20 @@ shinyUI(dashboardPage(
       tabName = "school",
       fluidRow(
         box(
+          selectizeInput(inputId = "District",
+                         label = "Select District",
+                         choices = unique(nydoe$District)),
+        ),
+        
+        box(
+          selectizeInput(inputId = "Name",
+                         label = "Select School",
+                         choices = unique(nydoe$Name)),  
+        )
+      ),
+      
+      fluidRow(
+        box(
           title = "Student Achievement",
           status = "primary",
           solidHeader = TRUE,

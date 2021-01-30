@@ -21,7 +21,11 @@ ggplot(graph, aes(x=Year)) + geom_line(aes(y=School), color= "School", lwd=2) +
        y="Student Achievement Score")+
   scale_fill_hue(c = 40)
 
-####
+
+#selectinput prep
+
+j =nydoe %>% filter(School.Number=="20")
+
 
 ###
 school = nydoe %>% filter(DBN=="01M020", Year==2019) %>% pivot_longer(c(27:32), names_to = "Quality", values_to = "QScore" ) %>% select(Quality,QScore) %>% 

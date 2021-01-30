@@ -1,9 +1,19 @@
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
+  observe({ #this updates the choice of schools based on the selected district
+    Name <- unique(nydoe %>%
+                     filter(nydoe$District == input$District) %>%
+                     .$Name)
+    updateSelectizeInput(
+      session, "Name",
+      choices = Name,
+      selected = Name[1])
+  })  
+  
   #Student achievement chart
   output$plot1 <- renderPlot({
-    school = nydoe %>% filter(DBN == "01M020") %>% select(Year, SA.Score)
-    district = nydoe %>% filter(District=="1") %>% select(Year,SA.Score) %>% group_by(Year) %>% summarise(SA.Score = mean(SA.Score, na.rm=T))
+    school = nydoe %>% filter(Name == input$Name) %>% select(Year, SA.Score)
+    district = nydoe %>% filter(District==input$District) %>% select(Year,SA.Score) %>% group_by(Year) %>% summarise(SA.Score = mean(SA.Score, na.rm=T))
     city = city = nydoe %>% group_by(Year) %>% summarise(SA.Score = mean(SA.Score, na.rm=T))
     graph=cbind(school, district$SA.Score,city$SA.Score)
     colnames(graph)[2:4] = c("School","District","City")
