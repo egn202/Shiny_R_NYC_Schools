@@ -112,7 +112,7 @@ shinyServer(function(input, output, session) {
   output$plot8 <- renderPlot({
     nydoe %>% pivot_longer(c(Asian, Black, Hisp, White),
                            names_to = "Race",
-                           values_to = "Enroll") %>% filter(District == "1") %>%
+                           values_to = "Enroll") %>% filter(District == input$District2) %>%
       ggplot() + geom_col(aes(x = Year, y = Enroll, fill = Race),
                           stat = "identity",
                           position = "fill") +
@@ -126,7 +126,7 @@ shinyServer(function(input, output, session) {
   
   #quality ratings charts (district level)
   output$plot9 <- renderPlot({
-    quality = nydoe %>% filter(District == "1", Year == 2019) %>% pivot_longer(c(27:32), names_to = "Quality", values_to = "QScore") %>% select(Year, Name, Quality, QScore) %>% 
+    quality = nydoe %>% filter(District == input$District2, Year == 2019) %>% pivot_longer(c(27:32), names_to = "Quality", values_to = "QScore") %>% select(Year, Name, Quality, QScore) %>% 
       mutate(Quality=gsub(Quality,pattern="RI.Score",replacement="Rigorous Instruction")) %>% 
       mutate(Quality=gsub(Quality,pattern="SuprtEnv.Score",replacement="Supportive Enviornment")) %>%  
       mutate(Quality=gsub(Quality,pattern="CollabT.Score",replacement="Collaborative Teachers")) %>%     
@@ -136,13 +136,21 @@ shinyServer(function(input, output, session) {
       
     ggplot(data=quality, aes(Quality, QScore)) + geom_bar(aes(fill = Quality), stat='identity',) + coord_flip() + labs(y="Score",x="") + theme_classic() + 
       theme(legend.position ="top", axis.text.y = element_blank()) + scale_fill_brewer(palette="Set1") + facet_wrap(~Name)+ theme(strip.text.x = element_text(size = 9))
-    
-  })
+    })
   
-  
+  #Test scores for district
+  output$plot10 <- renderPlot({
+    nydoe %>% filter(District==input$District2) %>%select(Year,District,Name, School.Number ,ELA.Std,Math.Std) %>% 
+      pivot_longer(c(5:6), names_to ="Type", values_to = "Pct.at.Std") %>%
+      ggplot() + geom_line(aes(x=Year, y=Pct.at.Std, color=Type),lwd=1.5) + 
+      geom_point(aes(x=Year, y=Pct.at.Std),color="black",alpha=.25) +
+      facet_wrap(~Name)+
+      labs(x="Year",
+           y="% Children at Standard")+scale_color_brewer(palette="Set1")+theme_bw()+
+      theme(strip.text.x = element_text(size = 9))+ theme(legend.position = "top")
   })
 
-
+})
 
 
 

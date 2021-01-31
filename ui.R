@@ -4,6 +4,7 @@ library(tidyverse)
 library(lubridate)
 library(viridis)
 library(hrbrthemes)
+library(DT)
 
 shinyUI(dashboardPage(
   skin = "purple",
@@ -80,10 +81,10 @@ shinyUI(dashboardPage(
       
       tabBox(title = "Holder", # The id lets us use input$tabset1 on the server to find the current tab
        id = "tabset1",width = 13,
-       tabPanel("Demographics", plotOutput("plot8",height=800)),
        tabPanel("Quality Survey", plotOutput("plot9",height=800)),
-       tabPanel("Student Info", "eugene"))          
-            
-            )
+       tabPanel("Student Achievement", plotOutput("plot10",height=800)),
+       tabPanel("Demographics", plotOutput("plot8",height=800))
+       )          
+      )
   ))
 ))
