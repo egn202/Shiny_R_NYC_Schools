@@ -8,7 +8,15 @@ shinyServer(function(input, output, session) {
       session, "Name",
       choices = Name,
       selected = Name[1])
-  })  
+    
+    Name2 <- unique(nydoe %>%
+                     filter(nydoe$District == input$District2) %>%
+                     .$Name)
+    updateSelectizeInput(
+      session, "Name2",
+      choices = Name2,
+      selected = Name2[1])
+    })  
   
   #Student achievement chart
   output$plot1 <- renderPlot({
@@ -100,5 +108,42 @@ shinyServer(function(input, output, session) {
            y="%")+scale_color_brewer(palette="Dark2")+theme_classic()
   })
   
+  # demograpic for district (wrapped)
+  output$plot8 <- renderPlot({
+    nydoe %>% pivot_longer(c(Asian, Black, Hisp, White),
+                           names_to = "Race",
+                           values_to = "Enroll") %>% filter(District == "1") %>%
+      ggplot() + geom_col(aes(x = Year, y = Enroll, fill = Race),
+                          stat = "identity",
+                          position = "fill") +
+      scale_fill_brewer(palette = "Set1") + theme(
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        panel.background = element_rect(fill = "white", )
+      ) + labs(y = "", x = "") + facet_wrap(~ Name) + theme(strip.background = element_rect(color = "white"),
+                                                            strip.text.x = element_text(size = 9))  
+    })
+  
+  #quality ratings charts (district level)
+  output$plot9 <- renderPlot({
+    quality = nydoe %>% filter(District == "1", Year == 2019) %>% pivot_longer(c(27:32), names_to = "Quality", values_to = "QScore") %>% select(Year, Name, Quality, QScore) %>% 
+      mutate(Quality=gsub(Quality,pattern="RI.Score",replacement="Rigorous Instruction")) %>% 
+      mutate(Quality=gsub(Quality,pattern="SuprtEnv.Score",replacement="Supportive Enviornment")) %>%  
+      mutate(Quality=gsub(Quality,pattern="CollabT.Score",replacement="Collaborative Teachers")) %>%     
+      mutate(Quality=gsub(Quality,pattern="Comunty.Score",replacement="Community")) %>% 
+      mutate(Quality=gsub(Quality,pattern="Leadrshp.Score",replacement="Leadership")) %>% 
+      mutate(Quality=gsub(Quality,pattern="Trust.Score",replacement="Trust"))
+      
+    ggplot(data=quality, aes(Quality, QScore)) + geom_bar(aes(fill = Quality), stat='identity',) + coord_flip() + labs(y="Score",x="") + theme_classic() + 
+      theme(legend.position ="top", axis.text.y = element_blank()) + scale_fill_brewer(palette="Set1") + facet_wrap(~Name)+ theme(strip.text.x = element_text(size = 9))
+    
+  })
+  
   
   })
+
+
+
+
+
+

@@ -24,7 +24,7 @@ ggplot(graph, aes(x=Year)) + geom_line(aes(y=School), color= "School", lwd=2) +
 
 #selectinput prep
 
-j =nydoe %>% filter(School.Number=="20")
+nydoe %>% filter(School.Number=="20")
 
 
 ###
@@ -82,6 +82,19 @@ nydoe %>% mutate(
                       stat = "identity",
                       position = "fill") + facet_wrap(~Name)
 
+
+nydoe %>% pivot_longer(c(Asian, Black, Hisp, White),
+                       names_to = "Race",
+                       values_to = "Enroll") %>% filter(District == "1") %>%
+  ggplot() + geom_col(aes(x = Year, y = Enroll, fill = Race),
+                      stat = "identity",
+                      position = "fill") +
+  scale_fill_brewer(palette = "Set1") + theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    panel.background = element_rect(fill = "white", )
+  ) + labs(y = "", x = "") + facet_wrap(~ Name) + theme(strip.background = element_rect(color = "white"),
+                                                        strip.text.x = element_text(size = 7))
 #########
 
 
