@@ -204,9 +204,26 @@ shinyServer(function(input, output, session) {
     colnames(all_schools) = c("Borough","District","Number","Name","% at ELA Std","% at Math Std","Student Achievement Score")
     datatable(all_schools, rownames=FALSE, options = list(pageLength = 5,lengthMenu = c(5,10))) 
   })
-  
-  
 
+  #Scatter: quality vs testing
+  output$plot16 <- renderPlot({
+    t = nydoe %>% select(Math.Std,ELA.Std,RI.Score,CollabT.Score, SuprtEnv.Score,Leadrshp.Score,Comunty.Score,Trust.Score)
+    colnames(t)[1:8] = c("Math","ELA","Rigorous Instruction","Collaborative Teachers","Supportive Enviornment","Leadership","Community","Trust")
+    t = t %>% pivot_longer(c(3:8), names_to = "Quality",values_to = "QScore" ) %>% pivot_longer(c(1,2), names_to = "Test", values_to = "TScore") 
+
+    t %>% filter(Quality == "Supportive Enviornment", Test == "Math") %>% 
+      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#3399FF", alpha=.5)+ geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()
+  })  
+  
+  #Scatter: quality vs testing
+  output$plot17 <- renderPlot({
+    t = nydoe %>% select(Math.Std,ELA.Std,RI.Score,CollabT.Score, SuprtEnv.Score,Leadrshp.Score,Comunty.Score,Trust.Score)
+    colnames(t)[1:8] = c("Math","ELA","Rigorous Instruction","Collaborative Teachers","Supportive Enviornment","Leadership","Community","Trust")
+    t = t %>% pivot_longer(c(3:8), names_to = "Quality",values_to = "QScore" ) %>% pivot_longer(c(1,2), names_to = "Test", values_to = "TScore") 
+    
+    t %>% filter(Quality == "Community", Test == "Math") %>% 
+      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#66FF66", alpha=.5)+ geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()
+  })  
   
     
   

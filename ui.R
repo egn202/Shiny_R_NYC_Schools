@@ -95,6 +95,35 @@ shinyUI(dashboardPage(
       ),
       plotOutput("plot14"),
       plotOutput("plot15")
-      
-      ))
-)))
+      ),
+    
+    tabItem(tabName = "insights",
+            # fluidRow(
+            #   box(selectizeInput(inputId = "District2",label = "District",choices = unique(nydoe$District))),
+            #   ),
+            tabBox(title = tagList(shiny::icon("chalkboard-teacher"),""), # The id lets us use input$tabset1 on the server to find the current tab
+                   id = "tabset2",width = 13,
+                   tabPanel("Scatter Plots",
+                            fluidRow(
+                              column(3,selectizeInput(inputId = "xaxis",label = "x-axis",choices = unique(nydoe$District))),
+                              column(3,selectizeInput(inputId = "yaxis",label = "y-axis",choices = unique(nydoe$District))),
+                              column(3,selectizeInput(inputId = "xaxis2",label = "x-axis",choices = unique(nydoe$District))),
+                              column(3,selectizeInput(inputId = "yaxis2",label = "y-axis",choices = unique(nydoe$District)))
+                            ),
+                            fluidRow(
+                              column(6,plotOutput("plot16", height = 250)),
+                              column(6,plotOutput("plot17", height = 250))
+                            ),
+                            
+                            fluidRow(
+                              box(title = "Scatter Me!",status = "primary",solidHeader = FALSE,collapsible = TRUE,),
+
+                              box(title = "Citywide Math Testing",status = "primary",solidHeader = FALSE,collapsible = TRUE
+                                  ))
+                            )),
+                   #tabPanel("Student Achievement", plotOutput("plot10",height=800)),
+                   tabPanel("Mega Pots!")
+            )          
+      )
+    )
+))
