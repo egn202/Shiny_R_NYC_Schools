@@ -207,22 +207,14 @@ shinyServer(function(input, output, session) {
 
   #Scatter: quality vs testing
   output$plot16 <- renderPlot({
-    t = nydoe %>% select(Math.Std,ELA.Std,RI.Score,CollabT.Score, SuprtEnv.Score,Leadrshp.Score,Comunty.Score,Trust.Score)
-    colnames(t)[1:8] = c("Math","ELA","Rigorous Instruction","Collaborative Teachers","Supportive Enviornment","Leadership","Community","Trust")
-    t = t %>% pivot_longer(c(3:8), names_to = "Quality",values_to = "QScore" ) %>% pivot_longer(c(1,2), names_to = "Test", values_to = "TScore") 
-
-    t %>% filter(Quality == "Supportive Enviornment", Test == "Math") %>% 
-      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#3399FF", alpha=.5)+ geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()
+    scatter1 %>% filter(Quality == input$quality1, Test == input$test1) %>% 
+      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#3399FF", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()
   })  
   
   #Scatter: quality vs testing
   output$plot17 <- renderPlot({
-    t = nydoe %>% select(Math.Std,ELA.Std,RI.Score,CollabT.Score, SuprtEnv.Score,Leadrshp.Score,Comunty.Score,Trust.Score)
-    colnames(t)[1:8] = c("Math","ELA","Rigorous Instruction","Collaborative Teachers","Supportive Enviornment","Leadership","Community","Trust")
-    t = t %>% pivot_longer(c(3:8), names_to = "Quality",values_to = "QScore" ) %>% pivot_longer(c(1,2), names_to = "Test", values_to = "TScore") 
-    
-    t %>% filter(Quality == "Community", Test == "Math") %>% 
-      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#66FF66", alpha=.5)+ geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()
+    scatter1 %>% filter(Quality == input$quality2, Test == input$test2) %>% 
+      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#66FF66", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()
   })  
   
     

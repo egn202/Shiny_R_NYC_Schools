@@ -105,10 +105,10 @@ shinyUI(dashboardPage(
                    id = "tabset2",width = 13,
                    tabPanel("Scatter Plots",
                             fluidRow(
-                              column(3,selectizeInput(inputId = "xaxis",label = "x-axis",choices = unique(nydoe$District))),
-                              column(3,selectizeInput(inputId = "yaxis",label = "y-axis",choices = unique(nydoe$District))),
-                              column(3,selectizeInput(inputId = "xaxis2",label = "x-axis",choices = unique(nydoe$District))),
-                              column(3,selectizeInput(inputId = "yaxis2",label = "y-axis",choices = unique(nydoe$District)))
+                              column(3,selectizeInput(inputId = "quality1",label = "Quality Rating",choices = unique(scatter1$Quality))),
+                              column(3,selectizeInput(inputId = "test1",label = "Test Type: Math or ELA",choices = unique(scatter1$Test))),
+                              column(3,selectizeInput(inputId = "quality2",label = "Quality Rating",choices = unique(scatter1$Quality))),
+                              column(3,selectizeInput(inputId = "test2",label = "Test Type: Math or ELA",choices = unique(scatter1$Test)))
                             ),
                             fluidRow(
                               column(6,plotOutput("plot16", height = 250)),
