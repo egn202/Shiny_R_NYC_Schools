@@ -5,6 +5,7 @@ library(lubridate)
 library(viridis)
 library(hrbrthemes)
 library(DT)
+library(htmltools)
 
 shinyUI(dashboardPage(
   skin = "purple",
@@ -14,6 +15,9 @@ shinyUI(dashboardPage(
     img(src = "http://mannahattamamma.com/wp-content/uploads/2010/11/districtmapbig.gif", height = 240, width = 230),
     menuItem("School", tabName = "school", icon = icon("school")),
     menuItem("District", tabName = "district", icon = icon("layer-group")),
+    menuSubItem(icon = NULL,
+                selectizeInput(inputId = "District2",label = "District",choices = unique(nydoe$District))
+    ),
     menuItem("City", tabName = "city", icon = icon("apple-alt")),
     menuItem("Insights", tabName = "insights", icon = icon("lightbulb")),
     menuItem("Source code",icon = icon("file-code-o"),href = "https://github.com/rstudio/shinydashboard/") #creates link to another website
@@ -50,17 +54,6 @@ shinyUI(dashboardPage(
           tabPanel("Student Info", plotOutput("plot6",height=250)))
       )
     ),
-      # 
-      # fluidRow(
-      #   tabBox(
-      #     side = "right",
-      #     height = "250px",
-      #     selected = "Tab3",
-      #     tabPanel("Tab1", "eugene"),
-      #     tabPanel("Tab2", "Tab content 2"),
-      #     tabPanel("Tab3", "Note that when side=right, the tab order is reversed.")
-      #   )
-      # ),
       # fluidRow(tabBox(
       #   # Title can include an icon
       #   title = tagList(shiny::icon("gear"), "tabBox status"),
@@ -74,11 +67,10 @@ shinyUI(dashboardPage(
 
     # Second tab content
     tabItem(tabName = "district",
-      fluidRow(
-        box(selectizeInput(inputId = "District2",label = "District",choices = unique(nydoe$District))),
-        ),
-      
-      tabBox(title = "", # The id lets us use input$tabset1 on the server to find the current tab
+      # fluidRow(
+      #   box(selectizeInput(inputId = "District2",label = "District",choices = unique(nydoe$District))),
+      #   ),
+      tabBox(title = tagList(shiny::icon("chalkboard-teacher"),""), # The id lets us use input$tabset1 on the server to find the current tab
        id = "tabset1",width = 13,
        tabPanel("Quality Survey", plotOutput("plot9",height=800)),
        tabPanel("Student Achievement", plotOutput("plot10",height=800)),
@@ -87,17 +79,18 @@ shinyUI(dashboardPage(
       ),
     
     tabItem(tabName = "city",
+      DT::dataTableOutput("table2"),
+    # fluidRow(
+      #   # box(title = "Citywide Student Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE, 
+      #   #     plotOutput("plot11", height = 250)),
+      #   box(title = "Need a title pls",status = "primary",solidHeader = FALSE,collapsible = TRUE, height = 450, width=9,
+      #       div(style="overflow-y: scroll", DT::dataTableOutput("table2")))
+      # ),
+
       fluidRow(
-        box(title = "Citywide Student Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE, 
-            plotOutput("plot11", height = 250)),
-        box(title = "Holder",status = "primary",solidHeader = TRUE,collapsible = TRUE,
-            plotOutput("holder", height = 250))
-      ),
-      
-      fluidRow(
-        box(title = "Citywide ELA Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE, 
+        box(title = "Citywide ELA Testing",status = "primary",solidHeader = FALSE,collapsible = TRUE,
             plotOutput("plot12", height = 250)),
-        box(title = "Citywide Math Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE,
+        box(title = "Citywide Math Testing",status = "primary",solidHeader = FALSE,collapsible = TRUE,
             plotOutput("plot13", height = 250))
       ),
       plotOutput("plot14"),

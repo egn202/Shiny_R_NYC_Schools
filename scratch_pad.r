@@ -21,11 +21,29 @@ ggplot(graph, aes(x=Year)) + geom_line(aes(y=School), color= "School", lwd=2) +
        y="Student Achievement Score")+
   scale_fill_hue(c = 40)
 
+#table of schools for test scores
+y = nydoe %>% filter(Year=="2019") %>% select(District,School.Number,Name,ELA.Std,Math.Std,SA.Score)
 
-#selectinput prep
 
-nydoe %>% filter(School.Number=="20")
 
+
+#enrollment counts by year, dodged by race, total line in back -- nothing of interest
+
+g = nydoe %>% mutate(Asian = Asian/100 * Enrollment,Black = Black/100 * Enrollment,Hisp = Hisp/100 * Enrollment,White = White/100 * Enrollment) %>% 
+  pivot_longer(c(Asian, Black, Hisp, White),names_to = "Race",values_to = "Enroll") %>% select(Year,Race,Enroll) %>% 
+  group_by(Year, Race) %>% summarise(Enroll=sum(Enroll))
+
+h = nydoe %>% group_by(Year) %>% summarise(Enroll=sum(Enrollment))
+
+
+ggplot() + geom_bar(data=g,aes(x = Year, y = Enroll, fill = Race), stat = "identity",position = "dodge") + scale_fill_brewer(palette = "Dark2")
+
+ggplot(data=h)+geom_line(data=h,aes(x=Year, y=Enroll))
+
+nydoe  
+    geom_line(aes(x=year,y=sum(Enroll)))
+
+nydoe %>% group_by(Year) %>% summarise(total=sum(Enrollment))
 
 ###
 school = nydoe %>% filter(DBN=="01M020", Year==2019) %>% pivot_longer(c(27:32), names_to = "Quality", values_to = "QScore" ) %>% select(Quality,QScore) %>% 

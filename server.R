@@ -171,26 +171,26 @@ shinyServer(function(input, output, session) {
            y="% Children at Standard")+scale_color_brewer(palette="Set1")+theme_bw()+
       theme(strip.text.x = element_text(size = 9))+ theme(legend.position = "bottom")
   })
-  
+  #density plot ELA citywide
   output$plot12 <- renderPlot({
     nydoe %>% ggplot(aes(x=ELA.Std, fill=(as.factor(Year)))) +
       geom_density( alpha=.4) +
       theme_ipsum()+ labs(x="ELA Standard",fill="")
   })
-  
+  #density plot math citywide
   output$plot13 <- renderPlot({
     nydoe %>% ggplot(aes(x=Math.Std, fill=(as.factor(Year)))) +
       geom_density( alpha=.4) +
       theme_ipsum()+ labs(x="Math Standard",fill="")
   })
-  
+  #boxplot city ELA
   output$plot14 <- renderPlot({
     nydoe %>% filter(Year=="2019", District !="84") %>% 
       ggplot(aes(x=District, y=ELA.Std))+geom_boxplot(aes(fill=Borough)) + 
       scale_fill_brewer(palette="Set1")+labs(y="Children at ELA Standard")+ theme_bw() +ggtitle("Citywide ELA Testing 2019")+
       theme(plot.title = element_text(hjust = 0.5))
   })
-  
+  #Boxplot city Math
   output$plot15 <- renderPlot({
     nydoe %>% filter(Year=="2019", District !="84") %>% 
       ggplot(aes(x=District, y=Math.Std))+geom_boxplot(aes(fill=Borough)) + 
@@ -198,10 +198,17 @@ shinyServer(function(input, output, session) {
       theme(plot.title = element_text(hjust = 0.5))
   })
   
+  # All test scores - 2019 schools for city tab DataTable
+  output$table2 <- DT::renderDataTable({
+    all_schools = nydoe %>% filter(Year=="2019") %>% select(Borough,District,School.Number,Name,ELA.Std,Math.Std,SA.Score)
+    colnames(all_schools) = c("Borough","District","Number","Name","% at ELA Std","% at Math Std","Student Achievement Score")
+    datatable(all_schools, rownames=FALSE, options = list(pageLength = 5,lengthMenu = c(5,10))) 
+  })
   
   
+
   
-  
+    
   
 })
 
