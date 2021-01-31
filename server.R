@@ -114,24 +114,18 @@ shinyServer(function(input, output, session) {
            y="%")+scale_color_brewer(palette="Set2")+theme_minimal()
   })
   
-  # demograpic for district (wrapped)
+  # demographic for district (wrapped)
   output$plot8 <- renderPlot({
     nydoe %>% pivot_longer(c(Asian, Black, Hisp, White),
                            names_to = "Race",
                            values_to = "Enroll") %>% filter(District == input$District2) %>%
-      ggplot() + geom_col(aes(x = Year, y = Enroll, fill = Race),
-                          stat = "identity",
-                          position = "fill") +
-      scale_fill_brewer(palette = "Dark2") + theme(
-        axis.ticks.y = element_blank(),
-        axis.text.y = element_blank(),
-        panel.background = element_rect(fill = "white", )
-      ) + labs(y = "", x = "") + 
+      ggplot() + geom_col(aes(x = Year, y = Enroll, fill = Race),stat = "identity",position = "fill") +
+      scale_fill_brewer(palette = "Dark2") + theme(legend.position ="top",axis.ticks.y = element_blank(),
+      axis.text.y = element_blank(),panel.background = element_rect(fill = "white", )) + labs(y = "", x = "") + 
       geom_hline(yintercept = .25, linetype="dashed", color = "grey", size=.1) +
       geom_hline(yintercept = .5, linetype="dashed", color = "grey", size=.1) +
       geom_hline(yintercept = .75, linetype="dashed", color = "grey", size=.1) +
-      facet_wrap(~ Name) + theme(strip.background = element_rect(color = "white"),
-                                                            strip.text.x = element_text(size = 9))  
+      facet_wrap(~ Name) + theme(strip.background = element_rect(color = "white"),strip.text.x = element_text(size = 9))  
     })
   
   #quality ratings charts (district level)
