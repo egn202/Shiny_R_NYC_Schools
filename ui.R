@@ -76,15 +76,32 @@ shinyUI(dashboardPage(
     tabItem(tabName = "district",
       fluidRow(
         box(selectizeInput(inputId = "District2",label = "District",choices = unique(nydoe$District))),
-        box(selectizeInput(inputId = "Name2",label = "School Name",choices = unique(nydoe$Name)))      
         ),
       
-      tabBox(title = "Holder", # The id lets us use input$tabset1 on the server to find the current tab
+      tabBox(title = "", # The id lets us use input$tabset1 on the server to find the current tab
        id = "tabset1",width = 13,
        tabPanel("Quality Survey", plotOutput("plot9",height=800)),
        tabPanel("Student Achievement", plotOutput("plot10",height=800)),
        tabPanel("Demographics", plotOutput("plot8",height=800))
        )          
-      )
-  ))
-))
+      ),
+    
+    tabItem(tabName = "city",
+      fluidRow(
+        box(title = "Citywide Student Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE, 
+            plotOutput("plot11", height = 250)),
+        box(title = "Holder",status = "primary",solidHeader = TRUE,collapsible = TRUE,
+            plotOutput("holder", height = 250))
+      ),
+      
+      fluidRow(
+        box(title = "Citywide ELA Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE, 
+            plotOutput("plot12", height = 250)),
+        box(title = "Citywide Math Testing",status = "primary",solidHeader = TRUE,collapsible = TRUE,
+            plotOutput("plot13", height = 250))
+      ),
+      plotOutput("plot14"),
+      plotOutput("plot15")
+      
+      ))
+)))

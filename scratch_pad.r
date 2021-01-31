@@ -39,9 +39,9 @@ g+geom_bar(aes(fill=cty), stat="identity")
 
 
 
-#hist of scores
-nydoe %>% ggplot(aes(x=SA.Score))+
-  geom_histogram(binwidth=.1, fill="#69b3a2", color="#e9ecef", alpha=0.9)+
+#hist of scores: all schools, all years
+nydoe %>% ggplot(aes(x=ELA.Std))+
+  geom_histogram(binwidth=1, fill="#69b3a2", color="#e9ecef", alpha=0.9)+
   theme_ipsum()
 
 
@@ -54,12 +54,12 @@ scale_fill_viridis(discrete = T) +
   xlab("")
 
 #density by year
-nydoe %>% ggplot(aes(x=Math.Std, fill=as.factor(Year))) +
-  geom_density(adjust=1.5, alpha=.4) +
+nydoe %>% ggplot(aes(x=ELA.Std, fill=as.factor(Year))) +
+  geom_density( alpha=.25) +
   theme_ipsum()
 
 #box plot scores by district
-nydoe %>% filter(Year=="2019") %>% ggplot(aes(x=District, y=SA.Score))+geom_boxplot(aes(fill=Borough))+facet_wrap(~Year)
+nydoe %>% filter(Year=="2019", District !="84") %>% ggplot(aes(x=District, y=ELA.Std))+geom_boxplot(aes(fill=Borough))+facet_wrap(~Year)
 
 nydoe %>%  ggplot(aes(x=District, y=SA.Score))+geom_boxplot(aes(fill=Borough))+facet_wrap(~Year)
 

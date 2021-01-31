@@ -30,19 +30,25 @@ shinyServer(function(input, output, session) {
     ggplot(graph) + geom_line(aes(x=Year, y=score, color=level),lwd=3)+
       geom_point(aes(x=Year, y=score),color="black",alpha=.5) + theme(legend.position = "right")+
       labs(x="Year",
-           y="Student Achievement Score")+scale_color_brewer(palette="Dark2")+theme_classic()
+           y="Student Achievement Score")+scale_color_brewer(palette="Set1")+theme_minimal()
   })
-  #quality ratings chart
+  #quality ratings bar chart
   output$plot2 <- renderPlot({
     quality = nydoe %>% filter(Name == input$Name, Year == 2019) %>% pivot_longer(c(27:32), names_to = "Quality", values_to = "QScore") %>% select(Quality, QScore)
-    quality$Quality = c("Rigorous Instruction","Collaborative Teachers","Supportive Enviornment","Leadership","Family-Community Ties","Trust")  
+    quality$Quality = c("Rigorous Instruction","Collaborative Teachers","Supportive Environment","Leadership","Family-Community Ties","Trust")  
     
-    ggplot(data=quality, aes(Quality, QScore)) + geom_bar(aes(fill = Quality), stat='identity',) + coord_flip() + labs(y = "Rating",x="") + theme_classic() + theme(legend.position ="none") + scale_fill_brewer(palette="Set1")
+    ggplot(data=quality, aes(Quality, QScore)) + geom_bar(aes(fill = Quality), stat='identity',) + coord_flip() + 
+      labs(y = "Rating",x="") +
+      geom_hline(yintercept = 1, linetype="dashed", color = "grey", size=.25) + 
+      geom_hline(yintercept = 2, linetype="dashed", color = "grey", size=.5) +
+      geom_hline(yintercept = 3, linetype="dashed", color = "grey", size=.5) +
+      geom_hline(yintercept = 4, linetype="dashed", color = "grey", size=.5) +
+      theme_classic() + theme(legend.position ="none") + scale_fill_brewer(palette="Set1")
 
   })
   #ELA standards chart
   output$plot3 <- renderPlot({
-    school = nydoe %>% filter(Name == input$Name) %>% select(Year, ELA.Std)
+    school = nydoe %>% filter(Name == input$Name) %>% select(Year, ELA.Std) %>% arrange(Year)
     district = nydoe %>% filter(District==input$District) %>% select(Year,ELA.Std) %>% group_by(Year) %>% summarise(ELA.Std = mean(ELA.Std, na.rm=T))
     city = city = nydoe %>% group_by(Year) %>% summarise(ELA.Std = mean(ELA.Std, na.rm=T))
     graph=cbind(school, district$ELA.Std,city$ELA.Std)
@@ -52,11 +58,11 @@ shinyServer(function(input, output, session) {
     ggplot(graph) + geom_line(aes(x=Year, y=score, color=level),lwd=3)+
       geom_point(aes(x=Year, y=score),color="black",alpha=.5) + theme(legend.position = "right")+
       labs(x="Year",
-           y="% Children at ELA Std")+scale_color_brewer(palette="Dark2")+theme_classic()
+           y="% Children at ELA Std")+scale_color_brewer(palette="Set1")+theme_minimal()
   })
   #Math Standards Chart
   output$plot4 <- renderPlot({
-    school = nydoe %>% filter(Name == input$Name) %>% select(Year, Math.Std)
+    school = nydoe %>% filter(Name == input$Name) %>% select(Year, Math.Std) %>% arrange(Year)
     district = nydoe %>% filter(District==input$District) %>% select(Year,Math.Std) %>% group_by(Year) %>% summarise(Math.Std = mean(Math.Std, na.rm=T))
     city = city = nydoe %>% group_by(Year) %>% summarise(Math.Std = mean(Math.Std, na.rm=T))
     graph=cbind(school, district$Math.Std,city$Math.Std)
@@ -66,13 +72,13 @@ shinyServer(function(input, output, session) {
     ggplot(graph) + geom_line(aes(x=Year, y=score, color=level),lwd=3)+
       geom_point(aes(x=Year, y=score),color="black",alpha=.5) + theme(legend.position = "right")+
       labs(x="Year",
-           y="% Children at Math Std")+scale_color_brewer(palette="Dark2")+theme_classic()
+           y="% Children at Math Std")+scale_color_brewer(palette="Set1")+theme_minimal()
   })
   
   #School demographics
   output$plot5 <- renderPlot({
     nydoe %>% filter(Name == input$Name) %>% select(Year, Asian, Black, Hisp, White) %>% pivot_longer(c(2:5), names_to = "Race", values_to = "Pct") %>%
-    ggplot()+geom_bar(aes(x=Year, y=Pct, fill=Race),stat="identity") + scale_fill_brewer(palette="Set1")+theme_classic()      
+    ggplot()+geom_bar(aes(x=Year, y=Pct, fill=Race),stat="identity") + scale_fill_brewer(palette="Dark2")+theme_classic()      
   })
   
   # show school info DataTable
@@ -93,7 +99,7 @@ shinyServer(function(input, output, session) {
     ggplot(g)+geom_line(aes(x=Year, y=Pct, color=Type),lwd=3)+
       geom_point(aes(x=Year, y=Pct),color="black",alpha=.5) + theme(legend.position = "right")+
       labs(x="Year",
-           y="%")+scale_color_brewer(palette="Dark2")+theme_classic()
+           y="%")+scale_color_brewer(palette="Dark2")+theme_minimal()
   })
   
   # attendance graph
@@ -105,7 +111,7 @@ shinyServer(function(input, output, session) {
     ggplot(school_info)+geom_line(aes(x=Year, y=Pct, color=Type),lwd=3)+
       geom_point(aes(x=Year, y=Pct),color="black",alpha=.5) + theme(legend.position = "right")+
       labs(x="Year",
-           y="%")+scale_color_brewer(palette="Dark2")+theme_classic()
+           y="%")+scale_color_brewer(palette="Set2")+theme_minimal()
   })
   
   # demograpic for district (wrapped)
@@ -116,11 +122,15 @@ shinyServer(function(input, output, session) {
       ggplot() + geom_col(aes(x = Year, y = Enroll, fill = Race),
                           stat = "identity",
                           position = "fill") +
-      scale_fill_brewer(palette = "Set1") + theme(
+      scale_fill_brewer(palette = "Dark2") + theme(
         axis.ticks.y = element_blank(),
         axis.text.y = element_blank(),
         panel.background = element_rect(fill = "white", )
-      ) + labs(y = "", x = "") + facet_wrap(~ Name) + theme(strip.background = element_rect(color = "white"),
+      ) + labs(y = "", x = "") + 
+      geom_hline(yintercept = .25, linetype="dashed", color = "grey", size=.1) +
+      geom_hline(yintercept = .5, linetype="dashed", color = "grey", size=.1) +
+      geom_hline(yintercept = .75, linetype="dashed", color = "grey", size=.1) +
+      facet_wrap(~ Name) + theme(strip.background = element_rect(color = "white"),
                                                             strip.text.x = element_text(size = 9))  
     })
   
@@ -134,11 +144,17 @@ shinyServer(function(input, output, session) {
       mutate(Quality=gsub(Quality,pattern="Leadrshp.Score",replacement="Leadership")) %>% 
       mutate(Quality=gsub(Quality,pattern="Trust.Score",replacement="Trust"))
       
-    ggplot(data=quality, aes(Quality, QScore)) + geom_bar(aes(fill = Quality), stat='identity',) + coord_flip() + labs(y="Score",x="") + theme_classic() + 
-      theme(legend.position ="top", axis.text.y = element_blank()) + scale_fill_brewer(palette="Set1") + facet_wrap(~Name)+ theme(strip.text.x = element_text(size = 9))
+    ggplot(data=quality, aes(Quality, QScore)) + geom_bar(aes(fill = Quality), stat='identity',) + coord_flip() + 
+      labs(y="Score",x="") + theme_classic() + theme(legend.position ="top", axis.text.y = element_blank()) + 
+      scale_fill_brewer(palette="Set1") + 
+      geom_hline(yintercept = 1, linetype="dashed", color = "grey", size=.25) + 
+      geom_hline(yintercept = 2, linetype="dashed", color = "grey", size=.5) +
+      geom_hline(yintercept = 3, linetype="dashed", color = "grey", size=.5) +
+      geom_hline(yintercept = 4, linetype="dashed", color = "grey", size=.5) +
+      facet_wrap(~Name)+ theme(strip.text.x = element_text(size = 9))
     })
   
-  #Test scores for district
+  #Testing for district
   output$plot10 <- renderPlot({
     nydoe %>% filter(District==input$District2) %>%select(Year,District,Name, School.Number ,ELA.Std,Math.Std) %>% 
       pivot_longer(c(5:6), names_to ="Type", values_to = "Pct.at.Std") %>%
@@ -149,7 +165,50 @@ shinyServer(function(input, output, session) {
            y="% Children at Standard")+scale_color_brewer(palette="Set1")+theme_bw()+
       theme(strip.text.x = element_text(size = 9))+ theme(legend.position = "top")
   })
-
+  
+  #Citywide test scores
+  output$plot11 <- renderPlot({
+    nydoe %>% select(Year,ELA.Std,Math.Std) %>% 
+      pivot_longer(c(2,3), names_to ="Type", values_to = "Pct.at.Std") %>%
+      group_by(Year,Type) %>% summarise(Pct.at.Std = mean(Pct.at.Std, na.rm=T)) %>% 
+      ggplot() + geom_line(aes(x=Year, y=Pct.at.Std, color=Type),lwd=1.5) + 
+      geom_point(aes(x=Year, y=Pct.at.Std),color="black",alpha=.25) +
+      labs(x="Year",
+           y="% Children at Standard")+scale_color_brewer(palette="Set1")+theme_bw()+
+      theme(strip.text.x = element_text(size = 9))+ theme(legend.position = "bottom")
+  })
+  
+  output$plot12 <- renderPlot({
+    nydoe %>% ggplot(aes(x=ELA.Std, fill=(as.factor(Year)))) +
+      geom_density( alpha=.4) +
+      theme_ipsum()+ labs(x="ELA Standard",fill="")
+  })
+  
+  output$plot13 <- renderPlot({
+    nydoe %>% ggplot(aes(x=Math.Std, fill=(as.factor(Year)))) +
+      geom_density( alpha=.4) +
+      theme_ipsum()+ labs(x="Math Standard",fill="")
+  })
+  
+  output$plot14 <- renderPlot({
+    nydoe %>% filter(Year=="2019", District !="84") %>% 
+      ggplot(aes(x=District, y=ELA.Std))+geom_boxplot(aes(fill=Borough)) + 
+      scale_fill_brewer(palette="Set1")+labs(y="Children at ELA Standard")+ theme_bw() +ggtitle("Citywide ELA Testing 2019")+
+      theme(plot.title = element_text(hjust = 0.5))
+  })
+  
+  output$plot15 <- renderPlot({
+    nydoe %>% filter(Year=="2019", District !="84") %>% 
+      ggplot(aes(x=District, y=Math.Std))+geom_boxplot(aes(fill=Borough)) + 
+      scale_fill_brewer(palette="Set1")+labs(y="Children at Math Standard")+ theme_bw() +ggtitle("Citywide Math Testing 2019")+
+      theme(plot.title = element_text(hjust = 0.5))
+  })
+  
+  
+  
+  
+  
+  
 })
 
 
