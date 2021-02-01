@@ -253,6 +253,13 @@ shinyServer(function(input, output, session) {
             icon = icon("readme"), width=5, col="orange") 
     
   })
+  
+  output$avgCity = renderInfoBox({
+    infoBox(h6(HTML("Citywide<br/>ELA & Math")),h4(HTML("~40%"), 
+            icon = icon("readme"), width=5, col="orange")) 
+    
+  })
+  
 })
 
 

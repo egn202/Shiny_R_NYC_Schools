@@ -31,6 +31,10 @@ shinyUI(dashboardPage(
       h4("Please use this page to gather insights for a specific school. Answer questions about how it's performing
          versus its district or the city, the demographic make-up over time, and gain additional info about important 
          details such as attendance rates, enrollment, and principal tenure (info box at the bottom)."),
+      h4("Note about the testing scores: Math and English Language Arts (ELA) are the key metrics used throughout this tool.
+         The figures state what % of a given school is at standard. For example, a Math testing value of 35% means that 35% of
+         students are meeting math standards. A little quirky, yes, welcome to NYC."),
+      
       fluidRow(
         box(selectizeInput(inputId = "District",label = "Select District",choices = unique(nydoe$District))),
         box(selectizeInput(inputId = "Name",label = "Select School",choices = unique(nydoe$Name)))
@@ -121,6 +125,7 @@ shinyUI(dashboardPage(
                further emphasizes the severity and complexity of the problem that probably cannot be solved through the school system alone."),
             infoBoxOutput("avgmathEco"),
             infoBoxOutput("avgELAEco"),
+            infoBoxOutput("avgCity"),
             br(),
             plotOutput("plot18"),
             br(),br(),br(),br(),br(),
