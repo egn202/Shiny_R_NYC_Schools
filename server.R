@@ -207,18 +207,52 @@ shinyServer(function(input, output, session) {
 
   #Scatter: quality vs testing
   output$plot16 <- renderPlot({
+    cor1 = scatter1 %>% filter(Quality == input$quality1, Test == input$test1) %>% summarise(Cor = cor(QScore,TScore, use="complete.obs"))
+
     scatter1 %>% filter(Quality == input$quality1, Test == input$test1) %>% 
-      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#3399FF", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()
+      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#CC33FF", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()+
+      xlab(input$quality1)+ ylab(input$test1)+ ggtitle(paste0("Cor:", round(cor1[[1]],digits=2)))
   })  
   
   #Scatter: quality vs testing
   output$plot17 <- renderPlot({
+    cor2 = scatter1 %>% filter(Quality == input$quality2, Test == input$test2) %>% summarise(Cor = cor(QScore,TScore, use="complete.obs"))
+    
     scatter1 %>% filter(Quality == input$quality2, Test == input$test2) %>% 
-      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#66FF66", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()
+      ggplot(aes(x=QScore, y=TScore, color=Quality))+geom_point(col="#00CC66", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()+
+      xlab(input$quality2)+ ylab(input$test2) + ggtitle(paste0("Cor:", round(cor2[[1]],digits=2)))
+    
   })  
   
-    
+  #Scatter: economic need vs testing
+  output$plot18 <- renderPlot({
+    nydoe %>% select(Math.Std,ELA.Std,EconNeed.)%>%  pivot_longer(c(1,2), names_to = "Test", values_to = "TScore") %>% 
+    ggplot(aes(x=EconNeed., y=TScore))+geom_point(col="#CC3333", alpha=.5)+ geom_smooth(col="#666666", se=FALSE)+theme_light()+
+      xlab("Economic Need")+ylab("Test Performance")+ggtitle("Testing Performance and Economic Need (Cor:-.65)")
+  })    
   
+  #scatter: econ need vs score
+  output$plot19 <- renderPlot({
+    nydoe %>% select(Attendance,EconNeed.)%>% 
+      ggplot(aes(x=EconNeed., y=Attendance))+geom_point(col="#663300", alpha=.5)+ 
+      geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()+ coord_cartesian(ylim = c(85,100))+
+      ggtitle("Attendance and Economic Need")
+    
+  })  
+  
+  output$avgmathEco = renderInfoBox({
+    avgmath_eco = nydoe %>% filter(EconNeed.>=86.10) %>% summarise(avgMth=mean(mean(Math.Std, na.rm=TRUE)))
+    infoBox(h6(HTML("Math Performance<br/>(Upper Quartile of<br/>Economic Need)")),round(avgmath_eco,digits=2), 
+    icon = icon("calculator"), width=5, col="orange") 
+    
+  })
+  
+  output$avgELAEco = renderInfoBox({
+    avgELA_eco = nydoe %>% filter(EconNeed.>=86.10) %>% summarise(avgELA=mean(mean(ELA.Std, na.rm=TRUE)))
+    infoBox(h6(HTML("ELA Performance<br/>(Upper Quartile of<br/>Economic Need)")),round(avgELA_eco,digits=2), 
+            icon = icon("readme"), width=5, col="orange") 
+    
+  })
 })
 
 

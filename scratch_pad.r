@@ -2,6 +2,34 @@ nydoe = read.csv('nydoe.csv')
 nydoe$District=as.factor(nydoe$District)
 nydoe$School.Number=as.factor(nydoe$School.Number)
 
+
+
+#infobox - 
+
+summary(nydoe$EconNeed.) #upper quartile = 86.1
+p = nydoe %>% filter(EconNeed.>=86.10) %>% summarise(avgMath=mean(Math.Std, na.rm=TRUE), avgELA=mean(mean(ELA.Std, na.rm=TRUE)))
+
+#scatter: econ need : race
+nydoe %>% select(EconNeed.,Asian,Black,Hispanic = Hisp,White) %>% pivot_longer(c(2:5), names_to = "Race", values_to = "Pct") %>% 
+  filter(Race == "Black") %>% 
+  ggplot(aes(x=EconNeed., y=Pct, color=Race))+geom_point(alpha=.5)+ 
+  geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()
+
+
+#scatter: econ need vs attendance####
+nydoe %>% select(Attendance,EconNeed.)%>% 
+  ggplot(aes(x=EconNeed., y=Attendance))+geom_point(col="#3399FF", alpha=.5)+ 
+  geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()+ coord_cartesian(ylim = c(85,100))
+
+
+cor(nydoe$EconNeed.,nydoe$Attendance, use="complete.obs") 
+
+#scatter: econ need vs score####
+nydoe %>% select(Math.Std,ELA.Std,EconNeed.)%>%  pivot_longer(c(1,2), names_to = "Test", values_to = "TScore") %>% 
+ggplot(aes(x=EconNeed., y=TScore))+geom_point(col="#3399FF", alpha=.5)+ geom_smooth(col="#666666", se=FALSE, method="lm")+theme_light()
+cor(t$EconNeed.,t$TScore, use="complete.obs")
+
+
 #scatterplots - various
 nydoe %>% ggplot(aes(x=ELA.Score, y=Trust.Score))+geom_point(aes(color=District))
 nydoe %>% ggplot(aes(x=SA.Score, y=Enrollment))+geom_point() #+ coord_cartesian(ylim = c(85,100))
@@ -35,7 +63,7 @@ nydoe %>% ggplot(aes(x=Math.Std, y=EconNeed.))+geom_point(aes())
 
 
 
-
+nydoe %>% filter 
 
 
 
